@@ -33,10 +33,10 @@ app.use((req, res, next) => {
 
 // 라우터 등록
 const authRouter = require('./routes/authRouter');
-//const mypageRouter = require('./routes/mypage');
+const mypageRouter = require('./routes/mypageRouter');
 
 app.use('/', authRouter);
-//app.use('/mypage', mypageRouter);
+app.use('/mypage', mypageRouter);
 
 // 기본 라우트
 app.get('/', (req, res) => {
