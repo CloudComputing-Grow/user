@@ -4,6 +4,7 @@ const validator = require('validator');
 
 const { User, RefreshToken, sequelize } = require('../models');
 
+//  JWT 토큰 생성 함수
 const createAccessToken = (user) => {
     return jwt.sign(
         {
@@ -18,6 +19,7 @@ const createAccessToken = (user) => {
     );
 };
 
+// JWT 리프레시 토큰 생성 함수
 const createRefreshToken = (user) => {
     return jwt.sign(
         {
@@ -30,12 +32,15 @@ const createRefreshToken = (user) => {
     );
 };
 
+
+// 리프레시 토큰 만료 날짜 계산 함수
 const getRefreshTokenExpireDate = () => {
     const date = new Date();
     date.setDate(date.getDate() + 30);
     return date;
 };
 
+// 회원가입
 exports.register = async (req, res) => {
     const transaction = await sequelize.transaction();
 
@@ -141,6 +146,7 @@ exports.register = async (req, res) => {
     }
 };
 
+// 로그인
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -202,6 +208,7 @@ exports.login = async (req, res) => {
     }
 };
 
+// 로그아웃
 exports.logout = async (req, res) => {
     try {
         const { refreshToken } = req.body;
@@ -232,6 +239,7 @@ exports.logout = async (req, res) => {
     }
 };
 
+// 리프레시 토큰 재발급
 exports.refreshToken = async (req, res) => {
     try {
         const { refreshToken } = req.body;
@@ -284,6 +292,7 @@ exports.refreshToken = async (req, res) => {
     }
 };
 
+// 이메일 변경
 exports.changeEmail = async (req, res) => {
     try {
         const userId = req.user.user_id;
@@ -334,6 +343,7 @@ exports.changeEmail = async (req, res) => {
     }
 };
 
+// 비밀번호 변경
 exports.changePassword = async (req, res) => {
     try {
         const userId = req.user.user_id;
@@ -403,6 +413,7 @@ exports.changePassword = async (req, res) => {
     }
 };
 
+// 회원탈퇴
 exports.deleteAccount = async (req, res) => {
     const transaction = await sequelize.transaction();
 
