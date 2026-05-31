@@ -5,7 +5,7 @@ const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL || 'http://localhost
 
 const GROWTH_SERVICE_URL = process.env.GROWTH_SERVICE_URL || 'http://localhost:3032';
 
-const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL || 'http://localhost:3033';
+const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL || 'http://localhost:3002';
 
 exports.getMyPage = async (req, res) => {
     try {
@@ -28,6 +28,8 @@ exports.getMyPage = async (req, res) => {
         // Mission Service, Growth Service, Achievement Service에서 마이페이지 관련 정보 동시 조회
         let missionStatus = null;
         let badgeType = null;
+
+        const totalCount = 5;
         /*
         // Mission Service 호출 (totalCount 조회)
         try {
@@ -96,6 +98,7 @@ exports.getMyPage = async (req, res) => {
                 email: user.email,
                 level: user.level,
                 missionStatus,
+                totalCount,
                 badgeType
             }
         });

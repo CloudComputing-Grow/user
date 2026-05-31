@@ -48,7 +48,7 @@ const mypageRouter = require('./routes/mypageRouter');
 const userRouter = require('./routes/userRouter');
 
 app.use('/', authRouter);
-app.use('/mypage', mypageRouter);
+app.use('/user/mypage', mypageRouter);
 app.use('/api/internal/v1/users', userRouter);
 
 // 기본 라우트

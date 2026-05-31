@@ -4,15 +4,15 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const { authenticateJWT } = require('../middleware/authMiddleware');
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.post('/logout', authController.logout);
+router.post('/auth/signup', authController.register);
+router.post('/auth/login', authController.login);
+router.post('/user/logout', authController.logout);
 
-router.delete('/delete-account', authenticateJWT, authController.deleteAccount);
+router.delete('/user/delete-account', authenticateJWT, authController.deleteAccount);
 
-router.post('/refresh', authController.refreshToken);
+router.post('/auth/refresh', authController.refreshToken);
 
-router.patch('/change-email', authenticateJWT, authController.changeEmail);
-router.patch('/change-password', authenticateJWT, authController.changePassword);
+router.patch('/user/change-email', authenticateJWT, authController.changeEmail);
+router.patch('/user/change-password', authenticateJWT, authController.changePassword);
 
 module.exports = router;
