@@ -1,9 +1,9 @@
 const axios = require('axios');
 const { User } = require('../models');
 
-const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL || 'http://localhost:3031';
+const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL || 'http://localhost:3003';
 
-const GROWTH_SERVICE_URL = process.env.GROWTH_SERVICE_URL || 'http://localhost:3032';
+const GROWTH_SERVICE_URL = process.env.GROWTH_SERVICE_URL || 'http://localhost:3005';
 
 const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL || 'http://localhost:3002';
 
