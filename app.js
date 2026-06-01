@@ -3,11 +3,22 @@ const path = require('path');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3030;
+
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'http://34.50.12.192:5173'
+    ],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 // Sequelize models/index.js
 const { sequelize } = require('./models');
@@ -34,9 +45,11 @@ app.use((req, res, next) => {
 // 라우터 등록
 const authRouter = require('./routes/authRouter');
 const mypageRouter = require('./routes/mypageRouter');
+const userRouter = require('./routes/userRouter');
 
 app.use('/', authRouter);
-app.use('/mypage', mypageRouter);
+app.use('/user/mypage', mypageRouter);
+app.use('/api/internal/v1/users', userRouter);
 
 // 기본 라우트
 app.get('/', (req, res) => {

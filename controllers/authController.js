@@ -2,9 +2,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
 
+const { publishUserCreated, publishUserDeleted } = require('../events/userEventPublisher');
 const { User, RefreshToken, sequelize } = require('../models');
 
-//  JWT 토큰 생성 함수
+// 액세스 토큰 생성 함수
 const createAccessToken = (user) => {
     return jwt.sign(
         {
@@ -19,7 +20,7 @@ const createAccessToken = (user) => {
     );
 };
 
-// JWT 리프레시 토큰 생성 함수
+// 리프레시 토큰 생성 함수
 const createRefreshToken = (user) => {
     return jwt.sign(
         {
@@ -31,7 +32,6 @@ const createRefreshToken = (user) => {
         }
     );
 };
-
 
 // 리프레시 토큰 만료 날짜 계산 함수
 const getRefreshTokenExpireDate = () => {
@@ -97,7 +97,8 @@ exports.register = async (req, res) => {
             {
                 email,
                 nickname,
-                password: hashedPassword
+                password: hashedPassword,
+                level: 1
             },
             { transaction }
         );
@@ -119,7 +120,11 @@ exports.register = async (req, res) => {
         console.log('refreshToken 저장 성공');
         */
 
+        // db 저장완료
         await transaction.commit();
+
+        //이벤트 발생
+        await publishUserCreated(user);
 
         return res.status(201).json({
             success: true,
@@ -239,7 +244,7 @@ exports.logout = async (req, res) => {
     }
 };
 
-// 리프레시 토큰 재발급
+//  토큰 재발급
 exports.refreshToken = async (req, res) => {
     try {
         const { refreshToken } = req.body;
@@ -443,6 +448,9 @@ exports.deleteAccount = async (req, res) => {
         });
 
         await transaction.commit();
+
+        // User DB 삭제 성공 후 이벤트 발행
+        await publishUserDeleted(userId);
 
         return res.status(200).json({
             success: true,
