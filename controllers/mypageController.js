@@ -1,16 +1,23 @@
 const axios = require('axios');
 const { User } = require('../models');
 
-const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL || 'http://localhost:3003';
+/*const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL || 'http://localhost:3003';
 
 const GROWTH_SERVICE_URL = process.env.GROWTH_SERVICE_URL || 'http://localhost:3005';
 
-const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL || 'http://localhost:3002';
+const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL || 'http://localhost:3002';*/
+
+const MISSION_SERVICE_URL = process.env.MISSION_SERVICE_URL;
+const GROWTH_SERVICE_URL = process.env.GROWTH_SERVICE_URL;
+const ACHIEVEMENT_SERVICE_URL = process.env.ACHIEVEMENT_SERVICE_URL;
 
 exports.getMyPage = async (req, res) => {
     try {
         const userId = req.user.user_id;
         const accessToken = req.token;
+
+        console.log('[MyPage] userId:', userId);
+        console.log('[MyPage] accessToken:', accessToken);
 
         // 사용자 정보 조회
         const user = await User.findOne({
@@ -50,6 +57,10 @@ exports.getMyPage = async (req, res) => {
         }
         */
 
+        console.log('[Growth 요청 헤더]', {
+            Authorization: `Bearer ${accessToken}`
+        });
+
         // Growth Service 호출 (현재 성장률 기반 미션 진행 상태 조회)
         try {
             const growthResponse = await axios.get(
@@ -70,6 +81,10 @@ exports.getMyPage = async (req, res) => {
         } catch (err) {
             console.error('[Growth Service 호출 실패]', err.response?.data || err.message);
         }
+
+        console.log('[Achievement 요청 헤더]', {
+            Authorization: `Bearer ${accessToken}`
+        });
 
         // Achievement Service 호출 (도감 기반 휘장 계산 및 DB 상태 업데이트)
         try {

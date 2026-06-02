@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 서비스 포트 오픈
-EXPOSE 3030
+EXPOSE 3001
 
 # 서버 실행
 CMD ["npm", "start"]
