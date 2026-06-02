@@ -92,7 +92,8 @@ exports.getMyPage = async (req, res) => {
                 `${ACHIEVEMENT_SERVICE_URL}/api/internal/v1/achievements/badge`,
                 {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        Authorization: `Bearer ${accessToken}`,
+                        'X-User-Id': userId
                     },
                     timeout: 3000
                 }
