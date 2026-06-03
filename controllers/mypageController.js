@@ -32,30 +32,11 @@ exports.getMyPage = async (req, res) => {
             });
         }
 
-        // Mission Service, Growth Service, Achievement Service에서 마이페이지 관련 정보 동시 조회
+        // Growth Service, Achievement Service에서 마이페이지 관련 정보 동시 조회
         let missionStatus = null;
         let badgeType = null;
 
         const totalCount = 5;
-        /*
-        // Mission Service 호출 (totalCount 조회)
-        try {
-            const missionResponse = await axios.get(
-                `${MISSION_SERVICE_URL}/api/missions/mypage/${userId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    timeout: 3000
-                }
-            );
-
-            missionStatus = missionResponse.data.data?.missionStatus ?? null;
-        } catch (err) {
-            console.error('[Mission Service 호출 실패]', err.response?.data || err.message);
-            missionStatus = null;
-        }
-        */
 
         console.log('[Growth 요청 헤더]', {
             Authorization: `Bearer ${accessToken}`
@@ -73,11 +54,15 @@ exports.getMyPage = async (req, res) => {
                 }
             );
 
-            const growthMissionStatus = growthResponse.data.data?.missionStatus ?? null;
+            const growthData = growthResponse.data.data;
 
-            if (growthMissionStatus) {
-                missionStatus = growthMissionStatus;
+            if (growthData) {
+                missionStatus = {
+                    completed: growthData.completedCount ?? 0
+                };
             }
+
+            console.log('[missionStatus]', missionStatus);
         } catch (err) {
             console.error('[Growth Service 호출 실패]', err.response?.data || err.message);
         }
@@ -89,7 +74,7 @@ exports.getMyPage = async (req, res) => {
         // Achievement Service 호출 (도감 기반 휘장 계산 및 DB 상태 업데이트)
         try {
             const achievementResponse = await axios.get(
-                `${ACHIEVEMENT_SERVICE_URL}/api/internal/v1/achievements/badge`,
+                `${ACHIEVEMENT_SERVICE_URL}/achievements/badges/representative`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -99,7 +84,19 @@ exports.getMyPage = async (req, res) => {
                 }
             );
 
-            badgeType = achievementResponse.data.data?.badgeType ?? null;
+            //badgeType = achievementResponse.data.data?.badgeType ?? null;
+
+            console.log('[Achievement 응답]', achievementResponse.data);
+
+            const badgeId = achievementResponse.data?.badgeId;
+
+            if (badgeId === 1) {
+                badgeType = 'silver';
+            } else if (badgeId === 2) {
+                badgeType = 'gold';
+            } else {
+                badgeType = null;
+            }
         } catch (err) {
             console.error('[Achievement Service 호출 실패]', err.response?.data || err.message);
             badgeType = null;
