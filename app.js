@@ -10,16 +10,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3030;
 
-app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://34.50.12.192:5173'
-    ],
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-}));
-
 // Sequelize models/index.js
 const { sequelize } = require('./models');
 
