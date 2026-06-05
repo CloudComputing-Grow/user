@@ -25,13 +25,9 @@ exports.getUserInfo = async (req, res) => {
         }
 
         return res.status(200).json({
-            success: true,
-            data: {
-                userId: user.user_id,
-                nickname: user.nickname,
-                email: user.email,
-                level: user.level
-            }
+            user_id: user.user_id,
+            nickname: user.nickname,
+            level: user.level
         });
     } catch (err) {
         console.error('[유저 정보 조회 오류]', err);
@@ -89,14 +85,17 @@ exports.updateUserLevel = async (req, res) => {
                 }
             }
         );
-
+        /*
+                return res.status(200).json({
+                    success: true,
+                    message: '유저 레벨 업데이트 성공',
+                    data: {
+                        userId: Number(userId),
+                        level: parsedLevel
+                    }
+                });*/
         return res.status(200).json({
-            success: true,
-            message: '유저 레벨 업데이트 성공',
-            data: {
-                userId: Number(userId),
-                level: parsedLevel
-            }
+            level: parsedLevel
         });
     } catch (err) {
         console.error('[유저 레벨 업데이트 오류]', err);
@@ -131,17 +130,14 @@ exports.getUserNicknames = async (req, res) => {
             ]
         });
 
-        const nicknameMap = {};
-
-        users.forEach((user) => {
-            nicknameMap[user.user_id] = user.nickname;
-        });
+        const nicknames = users.map(user => ({
+            userId: user.user_id,
+            nickname: user.nickname
+        }));
 
         return res.status(200).json({
             success: true,
-            data: {
-                nicknames: nicknameMap
-            }
+            data: nicknames
         });
     } catch (err) {
         console.error('[유저 닉네임 bulk 조회 오류]', err);
