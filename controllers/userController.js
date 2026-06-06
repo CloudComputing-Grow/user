@@ -115,7 +115,6 @@ exports.getUserNicknames = async (req, res) => {
 
         if (!Array.isArray(userIds) || userIds.length === 0) {
             return res.status(400).json({
-                success: false,
                 message: 'userIds 배열이 필요합니다.'
             });
         }
@@ -130,20 +129,17 @@ exports.getUserNicknames = async (req, res) => {
             ]
         });
 
-        const nicknames = users.map(user => ({
-            userId: user.user_id,
-            nickname: user.nickname
-        }));
+        const nicknames = {};
 
-        return res.status(200).json({
-            success: true,
-            data: nicknames
+        users.forEach(user => {
+            nicknames[user.user_id] = user.nickname;
         });
+
+        return res.status(200).json(nicknames);
     } catch (err) {
         console.error('[유저 닉네임 bulk 조회 오류]', err);
 
         return res.status(500).json({
-            success: false,
             message: '유저 닉네임 조회 중 오류가 발생했습니다.',
             error: err.message
         });
