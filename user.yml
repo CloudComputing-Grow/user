@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grow-user-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grow-user
+  template:
+    metadata:
+      labels:
+        app: grow-user
+    spec:
+      containers:
+        - name: grow-user
+          image: jjwon0407/grow-user:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - secretRef:
+                name: grow-user-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grow-user-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: grow-user
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
